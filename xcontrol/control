@@ -1,0 +1,14 @@
+Package: pnetlab-guacamole
+Version: 4.0.0
+Name: Guacamole
+Architecture: amd64
+Maintainer: pnetlab.com
+Homepage: http://www.pnetlab.com/
+Installed-Size: 12
+Section: devel
+Priority: optional
+Provides: pnetlab-guacamole
+Replaces: eve-ng-guacamole, eve-ng-pro-guacamole
+Pre-Depends: mysql-server, pnetlab-schema (>= 4.0.0)
+Depends: freerdp2-dev, libcairo2-dev, libjpeg-turbo8-dev, libpng-dev, libtool-bin, libossp-uuid-dev, libavcodec-dev, libavformat-dev, libavutil-dev, libswscale-dev, libpango1.0-dev, libssh2-1-dev, libtelnet-dev, libvncserver-dev, libwebsockets-dev, libpulse-dev, libssl-dev, libvorbis-dev, libwebp-dev, telnet, tomcat8, tomcat8-admin, tomcat8-docs
+Description: Guacamole for PNETLab

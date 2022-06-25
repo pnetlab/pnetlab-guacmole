@@ -1,0 +1,18 @@
+<user-mapping>
+    <authorize 
+            username="admin"
+            password="admin">
+
+        <connection name="Ubuntu-Server">
+            <protocol>ssh</protocol>
+            <param name="hostname">192.168.75.177</param>
+	    <param name="port">22</param>
+            <param name="username">root</param>
+        </connection>
+        <connection name="Windows Server">
+            <protocol>rdp</protocol>
+            <param name="hostname">192.168.0.100</param>
+            <param name="port">3389</param>
+        </connection>
+    </authorize>
+</user-mapping>

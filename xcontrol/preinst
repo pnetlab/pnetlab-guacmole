@@ -1,0 +1,19 @@
+#!/bin/bash
+
+echo -ne "Checking MySQL... "
+echo "\q" | mysql -u root --password=pnetlab &> /dev/null
+if [ $? -ne 0 ]; then
+	echo -e "\033[0;31mfailed\033[0m"
+	exit 1
+fi
+
+echo -e "\033[0;32mdone\033[0m"
+
+rm /usr/local/lib/libguac* &> /dev/null
+rm /var/lib/tomcat8/webapps/guacamole.war &> /dev/null
+rm -r /usr/share/tomcat8/.guacamole &> /dev/null
+
+exit 0
+
+
+

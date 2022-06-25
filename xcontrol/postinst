@@ -1,0 +1,50 @@
+#!/bin/bash
+
+
+echo "DROP DATABASE guacdb;" | mysql --host=localhost --user=root --password=pnetlab &> /dev/null
+echo "CREATE DATABASE IF NOT EXISTS guacdb;" | mysql --host=localhost --user=root --password=pnetlab &> /dev/null
+if [ $? -ne 0 ]; then
+	echo -e "\033[0;31mfailed\033[0m"
+	exit 1
+fi
+echo "GRANT ALL ON guacdb.* TO 'guacuser'@'localhost' IDENTIFIED BY 'pnetlab';" | mysql --host=localhost --user=root --password=pnetlab &> /dev/null
+if [ $? -ne 0 ]; then
+	echo -e "\033[0;31mfailed\033[0m"
+	exit 1
+fi
+cat /tmp/guacamole/db/guacamole-schema.sql | mysql --host=localhost --user=root --password=pnetlab guacdb &> /dev/null
+if [ $? -ne 0 ]; then
+	echo -e "\033[0;31mfailed\033[0m"
+	exit 1
+fi
+
+echo -e "\033[0;32mdone\033[0m"
+
+echo -ne "Enable services at boot... "
+
+chmod 755 -R /etc/guacamole
+chmod 755 -R /etc/init.d/guacd
+chmod 755 -R /usr/lib/x86_64-linux-gnu/freerdp2
+chmod 755 -R /usr/local/bin
+chmod 755 -R /usr/local/include
+chmod 755 -R /usr/local/lib
+chmod 755 -R /usr/local/sbin
+chmod 755 -R /usr/local/share
+
+ln -s /etc/guacamole/guacamole.war /var/lib/tomcat8/webapps/
+
+systemctl enable tomcat8 &> /dev/null
+systemctl enable mysql &> /dev/null
+systemctl enable guacd &> /dev/null
+# rm -f /usr/lib/x86_64-linux-gnu/freerdp/guacsnd-client.so || true
+# ln -s /usr/local/lib/freerdp/guacsnd-client.so  /usr/lib/x86_64-linux-gnu/freerdp/guacsnd-client.so
+echo -e "\033[0;32mdone\033[0m"
+echo -ne "Starting Tomcat... "
+cp -a /etc/tomcat8/server-guacamole.xml /etc/tomcat8/server.xml &> /dev/null
+sed -i -e'/.*Jasper.*/d' /etc/tomcat8/server.xml &> /dev/null
+service tomcat8 restart &> /dev/null
+pgrep -u tomcat8 java &> /dev/null && echo -e "\033[0;32mdone\033[0m" || echo -e "\033[0;31mfailed\033[0m"
+ldconfig &> /dev/null
+service guacd restart &> /dev/null
+exit 0;
+
